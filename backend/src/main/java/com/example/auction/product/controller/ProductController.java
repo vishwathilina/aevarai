@@ -67,7 +67,7 @@ public class ProductController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only resubmit your own products");
         }
 
-        if (product.getStatus() != ProductStatus.REJECTED) {
+        if (product.getStatus() != ProductStatus.REJECTED && product.getStatus() != ProductStatus.DOC_REJECTED) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Only rejected products can be resubmitted. Current status: " + product.getStatus());
         }
