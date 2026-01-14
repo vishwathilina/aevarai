@@ -27,6 +27,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/products/approved").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products").hasRole("AUCTIONEER")
+                        .requestMatchers(HttpMethod.GET, "/api/products/my").hasRole("AUCTIONEER")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/*/resubmit").hasRole("AUCTIONEER")
 
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
