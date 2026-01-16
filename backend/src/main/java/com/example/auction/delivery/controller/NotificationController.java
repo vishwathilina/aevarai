@@ -34,4 +34,16 @@ public class NotificationController {
         notificationRepository.save(notification);
         return ResponseEntity.ok("Notification marked as read");
     }
+
+    @PutMapping("/read-all")
+    public ResponseEntity<?> markAllAsRead(@RequestParam Long userId) {
+        List<Notification> notifications = notificationRepository.findByUserId(userId);
+        notifications.forEach(n -> {
+            if (!n.getIsRead()) {
+                n.setIsRead(true);
+                notificationRepository.save(n);
+            }
+        });
+        return ResponseEntity.ok("All notifications marked as read");
+    }
 }

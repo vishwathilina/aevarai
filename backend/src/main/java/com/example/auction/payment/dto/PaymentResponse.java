@@ -10,6 +10,7 @@ public class PaymentResponse {
     private Long bidderId;
     private BigDecimal amount;
     private String stripePaymentId;
+    private String clientSecret; // For Stripe PaymentIntent
     private String status;
     private LocalDateTime paidAt;
 
@@ -67,5 +68,13 @@ public class PaymentResponse {
 
     public void setPaidAt(LocalDateTime paidAt) {
         this.paidAt = paidAt;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 }

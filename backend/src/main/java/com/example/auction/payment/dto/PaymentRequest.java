@@ -8,12 +8,12 @@ public class PaymentRequest {
     @NotNull(message = "Auction ID is required")
     private Long auctionId;
 
-    @NotNull(message = "Payment method is required")
+    // Payment method is optional - Stripe Elements handles this on frontend
     private String paymentMethod;
 
     private String stripeToken;
 
-    @Positive(message = "Amount must be positive")
+    // Amount is optional - calculated from auction current price
     private Double amount;
 
     public Long getAuctionId() {
