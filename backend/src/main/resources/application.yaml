@@ -15,9 +15,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 # --- STRIPE CONFIGURATION ---
-# Set these environment variables before running the application:
-# STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PUBLISHABLE_KEY
+
 stripe:
-  api-key: ${STRIPE_API_KEY:your_stripe_secret_key_here}
-  webhook-secret: ${STRIPE_WEBHOOK_SECRET:your_webhook_secret_here}
-  publishable-key: ${STRIPE_PUBLISHABLE_KEY:your_publishable_key_here}
+  api-key: ${STRIPE_API_KEY:sk_test_51SlVv4RkaBQILD6AXRqODGdp41UfO94QXQOcfghwraWoZraUb5v4pKE1boqozp5eEGhthRz9f3mLpnpTX0nQZ2lf00EC0BymSa}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_your_webhook_secret}
+  publishable-key: ${STRIPE_PUBLISHABLE_KEY:pk_test_51SlVv4RkaBQILD6AyG5PZJbsO71BTsok0R6gdhK5nVsuwlLLUYNwazqfOLxyRGmnXom7E8y9b0ZdO5zUTfgvanoZ00VtvmqTBr}
