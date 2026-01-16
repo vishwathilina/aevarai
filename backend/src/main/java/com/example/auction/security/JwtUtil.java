@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtUtil {
 
     // Fixed secret key (at least 256 bits / 32 characters for HS256)
-    private static final String SECRET = "myAuctionAppSecretKeyThatIsAtLeast32CharsLong!";
+    private static final String SECRET = "0a4d26e4db3359221ea459654acae78ecb689a0c90974a3b87df1597df53a2f2";
     private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     private static final long EXPIRATION = 1000 * 60 * 60 * 24; // 24 hours
 

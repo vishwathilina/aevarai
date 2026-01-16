@@ -6,6 +6,8 @@ import com.example.auction.auth.dto.RegisterRequest;
 import com.example.auction.auth.entity.User;
 import com.example.auction.auth.repository.UserRepository;
 import com.example.auction.security.JwtUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,10 +45,11 @@ public class AuthController {
     public AuthResponse login(@RequestBody LoginRequest request) {
 
         User user = userRepository.findByEmail(request.email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                // avoid user enumeration; treat missing user the same as bad password
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         if (!user.getPassword().equals(request.password)) {
-            throw new RuntimeException("Invalid credentials");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
         String token = JwtUtil.generateToken(user.getId(), user.getRole());

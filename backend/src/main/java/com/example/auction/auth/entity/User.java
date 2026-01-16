@@ -1,8 +1,7 @@
 package com.example.auction.auth.entity;
 
 import jakarta.persistence.*;
-
-
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +26,22 @@ public class User {
 
     @Column(nullable = false)
     private boolean active = true;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 
     /* ===== GETTERS ===== */
 
@@ -74,5 +89,29 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
