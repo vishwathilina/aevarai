@@ -73,4 +73,15 @@ public class NotificationService {
         notification.setIsRead(false);
         notificationRepository.save(notification);
     }
+
+    public void notifyAuctionWon(Long winnerId, String productTitle, Long auctionId, Double winningBid) {
+        Notification notification = new Notification();
+        notification.setUserId(winnerId);
+        notification.setTitle("🎉 You Won the Auction!");
+        notification.setMessage("Congratulations! You won the auction for \"" + productTitle
+                + "\" with a bid of $" + String.format("%.2f", winningBid)
+                + ". Please complete payment to receive your item. Auction ID: " + auctionId);
+        notification.setIsRead(false);
+        notificationRepository.save(notification);
+    }
 }

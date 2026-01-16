@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface InspectionRepository extends JpaRepository<Inspection, Long> {
     List<Inspection> findByProductId(Long productId);
-
-    List<Inspection> findByStatus(String status);
 }

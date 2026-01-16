@@ -10,6 +10,10 @@ import com.example.auction.bidding.entity.Bid;
 import com.example.auction.bidding.entity.ProxyBid;
 import com.example.auction.bidding.repository.BidRepository;
 import com.example.auction.bidding.repository.ProxyBidRepository;
+import com.example.auction.delivery.entity.Notification;
+import com.example.auction.delivery.repository.NotificationRepository;
+import com.example.auction.product.entity.Product;
+import com.example.auction.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,15 +34,21 @@ public class BidService {
     private final ProxyBidRepository proxyBidRepository;
     private final AuctionRepository auctionRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
+    private final ProductRepository productRepository;
 
     public BidService(BidRepository bidRepository,
             ProxyBidRepository proxyBidRepository,
             AuctionRepository auctionRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            NotificationRepository notificationRepository,
+            ProductRepository productRepository) {
         this.bidRepository = bidRepository;
         this.proxyBidRepository = proxyBidRepository;
         this.auctionRepository = auctionRepository;
         this.userRepository = userRepository;
+        this.notificationRepository = notificationRepository;
+        this.productRepository = productRepository;
     }
 
     /**
@@ -86,16 +96,22 @@ public class BidService {
         bid.setBidType("MANUAL");
         bid = bidRepository.save(bid);
 
-        // 7. Update auction current price and winner
+        // 7. Notify previous winner if they were outbid
+        Long previousWinnerId = auction.getWinnerUserId();
+        if (previousWinnerId != null && !previousWinnerId.equals(userId)) {
+            notifyOutbid(previousWinnerId, auction);
+        }
+
+        // 8. Update auction current price and winner
         auction.setCurrentPrice(request.bidAmount.doubleValue());
         auction.setWinnerId(userId);
         auction.setWinnerUserId(userId);
         auctionRepository.save(auction);
 
-        // 8. Process proxy bids (auto-bidding)
+        // 9. Process proxy bids (auto-bidding)
         processProxyBids(auction, userId);
 
-        // 9. Return response
+        // 10. Return response
         return toBidResponse(bid);
     }
 
@@ -202,6 +218,12 @@ public class BidService {
             autoBid.setBidType("PROXY_AUTO");
             bidRepository.save(autoBid);
 
+            // Notify previous winner if they were outbid
+            Long previousWinnerId = auction.getWinnerUserId();
+            if (previousWinnerId != null && !previousWinnerId.equals(highestProxy.getBidderId())) {
+                notifyOutbid(previousWinnerId, auction);
+            }
+
             // Update auction
             auction.setCurrentPrice(newBidAmount);
             auction.setWinnerId(highestProxy.getBidderId());
@@ -299,6 +321,21 @@ public class BidService {
     public Optional<ProxyBidResponse> getUserProxyBid(Long auctionId, Long userId) {
         return proxyBidRepository.findByAuctionIdAndBidderId(auctionId, userId)
                 .map(this::toProxyBidResponse);
+    }
+
+    /**
+     * Notify a user that they have been outbid
+     */
+    private void notifyOutbid(Long userId, Auction auction) {
+        Product product = productRepository.findById(auction.getProductId()).orElse(null);
+        String productTitle = product != null ? product.getTitle() : "Auction #" + auction.getId();
+
+        Notification notification = new Notification();
+        notification.setUserId(userId);
+        notification.setTitle("You've been outbid!");
+        notification.setMessage("Someone placed a higher bid on " + productTitle + ". Auction #" + auction.getId());
+        notification.setIsRead(false);
+        notificationRepository.save(notification);
     }
 
     /**

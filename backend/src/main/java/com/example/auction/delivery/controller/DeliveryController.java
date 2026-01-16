@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/deliveries")
@@ -68,5 +69,11 @@ public class DeliveryController {
         }
         Delivery saved = deliveryRepository.save(delivery);
         return ResponseEntity.ok(saved);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Delivery>> getAllDeliveries() {
+        List<Delivery> deliveries = deliveryRepository.findAll();
+        return ResponseEntity.ok(deliveries);
     }
 }

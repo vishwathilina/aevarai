@@ -8,15 +8,21 @@ import com.example.auction.payment.entity.Commission;
 import com.example.auction.payment.entity.Payment;
 import com.example.auction.payment.repository.CommissionRepository;
 import com.example.auction.payment.repository.PaymentRepository;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,26 +52,64 @@ public class PaymentService {
             throw new RuntimeException("Auction has no winner");
         }
 
-        if (paymentRepository.existsByAuctionId(auction.getId())) {
-            throw new RuntimeException("Payment already exists for this auction");
+        // Check if payment already exists
+        Payment existingPayment = paymentRepository.findByAuctionId(auction.getId()).orElse(null);
+        if (existingPayment != null) {
+            PaymentResponse response = mapToPaymentResponse(existingPayment);
+            // If payment is already successful, don't create new PaymentIntent
+            if ("SUCCESS".equals(existingPayment.getStatus())) {
+                return response;
+            }
+            // If pending, try to retrieve PaymentIntent from Stripe
+            try {
+                PaymentIntent existingIntent = PaymentIntent.retrieve(existingPayment.getStripePaymentId());
+                if (existingIntent.getClientSecret() != null) {
+                    response.setClientSecret(existingIntent.getClientSecret());
+                    return response;
+                }
+            } catch (StripeException e) {
+                // If retrieval fails, continue to create new PaymentIntent below
+                // Update existing payment record with new PaymentIntent
+            }
         }
 
         BigDecimal amount = BigDecimal.valueOf(auction.getCurrentPrice());
 
-        Payment payment = new Payment();
+        // Create Stripe PaymentIntent
+        PaymentIntent paymentIntent;
+        try {
+            PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+                    .setAmount(amount.multiply(BigDecimal.valueOf(100)).longValue()) // Convert to cents
+                    .setCurrency("usd")
+                    .putMetadata("auctionId", auction.getId().toString())
+                    .putMetadata("bidderId", auction.getWinnerUserId().toString())
+                    .setAutomaticPaymentMethods(
+                            PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                    .setEnabled(true)
+                                    .build()
+                    )
+                    .build();
+
+            paymentIntent = PaymentIntent.create(params);
+        } catch (StripeException e) {
+            throw new RuntimeException("Failed to create Stripe PaymentIntent: " + e.getMessage());
+        }
+
+        // Create or update payment record
+        Payment payment = existingPayment != null ? existingPayment : new Payment();
         payment.setAuctionId(auction.getId());
         payment.setBidderId(auction.getWinnerUserId());
         payment.setAmount(amount);
         payment.setStatus("PENDING");
-
-        String stripePaymentId = "pi_sandbox_" + UUID.randomUUID().toString().substring(0, 8);
-        payment.setStripePaymentId(stripePaymentId);
+        payment.setStripePaymentId(paymentIntent.getId());
 
         payment = paymentRepository.save(payment);
 
         createCommissionRecord(auction, amount);
 
-        return mapToPaymentResponse(payment);
+        PaymentResponse response = mapToPaymentResponse(payment);
+        response.setClientSecret(paymentIntent.getClientSecret());
+        return response;
     }
 
     @Transactional

@@ -23,6 +23,10 @@ public class Notification {
     @Column(name = "is_read")
     private Boolean isRead = false;
 
+    // Mapping for potential legacy column causing issues
+    @Column(name = "read")
+    private Boolean read = false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -73,6 +77,7 @@ public class Notification {
 
     public void setIsRead(Boolean isRead) {
         this.isRead = isRead;
+        this.read = isRead; // Keep them in sync
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {

@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin/auctions")
 public class AdminAuctionController {
@@ -28,6 +30,12 @@ public class AdminAuctionController {
         this.auctionRepository = auctionRepository;
         this.productRepository = productRepository;
         this.notificationService = notificationService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Auction>> getAllAuctions() {
+        List<Auction> auctions = auctionRepository.findAll();
+        return ResponseEntity.ok(auctions);
     }
 
     @PostMapping
@@ -114,6 +122,17 @@ public class AdminAuctionController {
             auction.setStatus(AuctionStatus.NO_BIDS);
         } else {
             auction.setStatus(AuctionStatus.ENDED);
+            // Notify winner if auction has bids
+            if (auction.getWinnerUserId() != null) {
+                Product product = productRepository.findById(auction.getProductId()).orElse(null);
+                if (product != null) {
+                    notificationService.notifyAuctionWon(
+                            auction.getWinnerUserId(),
+                            product.getTitle(),
+                            auction.getId(),
+                            auction.getCurrentPrice());
+                }
+            }
         }
 
         auctionRepository.save(auction);
