@@ -1,68 +1,153 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background: 0 0% 100%;
+    --foreground: 20 14% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 12%;
+
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 100% 96%;
+    --secondary-foreground: 20 14% 12%;
+
+    --muted: 30 20% 96%;
+    --muted-foreground: 20 10% 45%;
+
+    --accent: 30 100% 94%;
+    --accent-foreground: 20 14% 12%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 15% 90%;
+    --input: 30 15% 90%;
+    --ring: 24 95% 53%;
+
+    --radius: 0.625rem;
+
+    /* Custom auction tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(30 100% 94%) 0%, hsl(35 100% 96%) 100%);
+    --bid-success: 142 76% 36%;
+    --bid-warning: 38 92% 50%;
+    --time-urgent: 0 84% 60%;
+    --surface-elevated: 0 0% 100%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 24 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 100% 96%;
+    --sidebar-accent-foreground: 20 14% 12%;
+    --sidebar-border: 30 15% 90%;
+    --sidebar-ring: 24 95% 53%;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    --background: 20 14% 8%;
+    --foreground: 30 20% 96%;
+
+    --card: 20 14% 12%;
+    --card-foreground: 30 20% 96%;
+
+    --popover: 20 14% 12%;
+    --popover-foreground: 30 20% 96%;
+
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 20 14% 16%;
+    --secondary-foreground: 30 20% 96%;
+
+    --muted: 20 14% 16%;
+    --muted-foreground: 30 10% 55%;
+
+    --accent: 20 14% 18%;
+    --accent-foreground: 30 20% 96%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 20 14% 20%;
+    --input: 20 14% 20%;
+    --ring: 24 95% 53%;
+
+    --sidebar-background: 20 14% 10%;
+    --sidebar-foreground: 30 20% 96%;
+    --sidebar-primary: 24 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 20 14% 16%;
+    --sidebar-accent-foreground: 30 20% 96%;
+    --sidebar-border: 20 14% 20%;
+    --sidebar-ring: 24 95% 53%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .hero-section {
+    background: var(--hero-gradient);
+  }
+
+  .auction-card {
+    @apply bg-card rounded-lg border border-border overflow-hidden transition-all duration-300;
+  }
+
+  .auction-card:hover {
+    @apply shadow-lg -translate-y-1;
+  }
+
+  .bid-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .time-badge {
+    @apply inline-flex items-center gap-1.5 text-sm font-medium;
+  }
+
+  .time-badge.urgent {
+    @apply text-destructive;
+  }
+
+  .category-card {
+    @apply flex flex-col items-center gap-3 p-4 rounded-xl bg-card border border-border transition-all duration-200 cursor-pointer;
+  }
+
+  .category-card:hover {
+    @apply border-primary bg-accent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }

@@ -1,0 +1,850 @@
+{
+  "info": {
+    "name": "Auction Platform - Complete API Collection",
+    "description": "Complete API testing collection for the Auction Platform with bidding, payments, and all modules",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sellerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "inspectorToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "aliceToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bobToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "carolToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register New User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@test.com\",\n  \"password\": \"test123\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"adminToken\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@auction.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Seller",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"sellerToken\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.seller@test.com\",\n  \"password\": \"seller123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Inspector",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"inspectorToken\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"inspector@auction.com\",\n  \"password\": \"inspector123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Alice (Bidder)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"aliceToken\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@test.com\",\n  \"password\": \"buyer123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Bob (Bidder)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"bobToken\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bob@test.com\",\n  \"password\": \"buyer123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Carol (Bidder)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"carolToken\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"carol@test.com\",\n  \"password\": \"buyer123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "View Approved Products (Public)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/approved",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "approved"]
+            }
+          }
+        },
+        {
+          "name": "View Single Product",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Seller - Submit Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"iPhone 15 Pro Max\",\n  \"description\": \"Brand new 1TB unlocked\",\n  \"category\": \"ELECTRONICS\",\n  \"handlingFeePaid\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "Seller - View My Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sellerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/my",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "my"]
+            }
+          }
+        },
+        {
+          "name": "Inspector - View Pending Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reviewer/products/pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviewer", "products", "pending"]
+            }
+          }
+        },
+        {
+          "name": "Inspector - Approve Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"Product verified and approved for auction\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviewer/products/6/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviewer", "products", "6", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Inspector - Reject Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Missing authenticity certificate\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviewer/products/8/reject",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviewer", "products", "8", "reject"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auctions",
+      "item": [
+        {
+          "name": "View Live Auctions (Public)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auctions/live",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auctions", "live"]
+            }
+          }
+        },
+        {
+          "name": "View Auction Details",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auctions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auctions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Admin - View Approved Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/products/approved",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "products", "approved"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Create Auction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 3,\n  \"startPrice\": 3000.0,\n  \"minIncrement\": 100.0,\n  \"startTime\": \"2026-01-14T10:00:00\",\n  \"endTime\": \"2026-01-14T18:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/auctions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "auctions"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Start Auction",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/auctions/3/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "auctions", "3", "start"]
+            }
+          }
+        },
+        {
+          "name": "Admin - End Auction",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/auctions/1/end",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "auctions", "1", "end"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bidding",
+      "item": [
+        {
+          "name": "View Bids for Auction (Public)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/auction/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "auction", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Highest Bid (Public)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/highest/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "highest", "1"]
+            }
+          }
+        },
+        {
+          "name": "Alice - Place Manual Bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"auctionId\": 1,\n  \"bidAmount\": 5900.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bids",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids"]
+            }
+          }
+        },
+        {
+          "name": "Bob - Place Manual Bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bobToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"auctionId\": 1,\n  \"bidAmount\": 6000.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bids",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids"]
+            }
+          }
+        },
+        {
+          "name": "Carol - Place Manual Bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{carolToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"auctionId\": 2,\n  \"bidAmount\": 2500.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bids",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids"]
+            }
+          }
+        },
+        {
+          "name": "Alice - Set Proxy Bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"auctionId\": 1,\n  \"maxAmount\": 6500.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/proxy-bids",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "proxy-bids"]
+            }
+          }
+        },
+        {
+          "name": "Bob - Set Proxy Bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bobToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"auctionId\": 2,\n  \"maxAmount\": 2800.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/proxy-bids",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "proxy-bids"]
+            }
+          }
+        },
+        {
+          "name": "Alice - View My Proxy Bids",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/proxy-bids/my",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "proxy-bids", "my"]
+            }
+          }
+        },
+        {
+          "name": "Alice - Update Proxy Bid",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maxAmount\": 7000.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/proxy-bids/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "proxy-bids", "1"]
+            }
+          }
+        },
+        {
+          "name": "Alice - Delete Proxy Bid",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/proxy-bids/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "proxy-bids", "1"]
+            }
+          }
+        },
+        {
+          "name": "Alice - View My Bid History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bids/my",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bids", "my"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Winner - Initiate Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{aliceToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"auctionId\": 1,\n  \"paymentMethod\": \"card\",\n  \"stripeToken\": \"tok_visa\",\n  \"amount\": 5800.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "checkout"]
+            }
+          }
+        },
+        {
+          "name": "Simulate Stripe Webhook - Success",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventType\": \"payment_intent.succeeded\",\n  \"paymentIntentId\": \"pi_sandbox_test123\",\n  \"status\": \"succeeded\",\n  \"chargeId\": \"ch_sandbox_test456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/webhook",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "webhook"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Get Payment by Auction",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/auction/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "auction", "1"]
+            }
+          }
+        },
+        {
+          "name": "Admin - View All Commissions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/commissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "commissions"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Get Commissions by Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/commissions/status/COLLECTED",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "commissions", "status", "COLLECTED"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Get Total Earnings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/commissions/earnings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "commissions", "earnings"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

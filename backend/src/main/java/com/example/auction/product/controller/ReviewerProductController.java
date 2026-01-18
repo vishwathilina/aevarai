@@ -48,7 +48,8 @@ public class ReviewerProductController {
                     "Only pending products can be approved. Current status: " + product.getStatus());
         }
 
-        product.setStatus(ProductStatus.APPROVED);
+        // Stage 1: document review approved -> move to inspection queue
+        product.setStatus(ProductStatus.DOC_APPROVED);
         product.setReviewedBy(reviewerId);
         product.setReviewedAt(LocalDateTime.now());
         product.setReviewRemarks(request.remarks);
@@ -79,7 +80,8 @@ public class ReviewerProductController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rejection reason is required");
         }
 
-        product.setStatus(ProductStatus.REJECTED);
+        // Stage 1: document review rejected -> seller can resubmit
+        product.setStatus(ProductStatus.DOC_REJECTED);
         product.setReviewedBy(reviewerId);
         product.setReviewedAt(LocalDateTime.now());
         product.setRejectionReason(request.reason);
