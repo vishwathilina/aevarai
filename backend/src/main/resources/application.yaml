@@ -2,10 +2,9 @@ spring:
   application:
     name: auction
   datasource:
-
-    url: jdbc:postgresql://localhost:5432/auction_db_4
-    username: postgres
-    password: 2004
+    url: ${DATABASE_URL:jdbc:postgresql://ep-broad-dawn-a1238rlr-pooler.ap-southeast-1.aws.neon.tech/auction?sslmode=require}
+    username: ${DATABASE_USERNAME:neondb_owner}
+    password: ${DATABASE_PASSWORD:npg_OL2BxARm7tZn}
   jpa:
     hibernate:
       ddl-auto: update
